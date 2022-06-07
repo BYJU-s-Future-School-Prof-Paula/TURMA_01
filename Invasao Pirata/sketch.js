@@ -6,11 +6,15 @@ const Body = Matter.Body;
 let motor;
 let mundo;
 var torre;
+var canhao;
+var bolaCanhao;
 
 var backgroundImg;
 
+
+
 function preload() {
-  backgroundImg = loadImage("/assets/background.gif")
+  backgroundImg = loadImage("./assets/background.gif")
 }
 
 function setup() {
@@ -20,9 +24,12 @@ function setup() {
   mundo = motor.world;
 
   torre = new Tower(150,350,160,310);
+  canhao = new Cannon(175,120,130,100);
+  bolaCanhao = new CannonBall(canhao.x, canhao.y);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
+  angleMode(DEGREES);
 }
 
 function draw() {
@@ -30,7 +37,15 @@ function draw() {
   Engine.update(motor);
 
   image(backgroundImg,0,0,width, height);
+  
+  canhao.display();
   torre.display();
+  bolaCanhao.display();
+}
 
+function keyReleased() {
+  if (keyCode === DOWN_ARROW) {
+    bolaCanhao.shoot();
+  }
 }
 
