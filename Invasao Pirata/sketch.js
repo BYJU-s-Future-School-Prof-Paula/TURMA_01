@@ -7,10 +7,10 @@ let motor;
 let mundo;
 var torre;
 var canhao;
-var bolaCanhao;
+var chao;
 
 var backgroundImg;
-
+var bolas = [];
 
 
 function preload() {
@@ -25,7 +25,9 @@ function setup() {
 
   torre = new Tower(150,350,160,310);
   canhao = new Cannon(175,120,130,100);
-  bolaCanhao = new CannonBall(canhao.x, canhao.y);
+  
+  chao = Bodies.rectangle(600,595,width*2,4,{isStatic: true});
+  World.add(mundo, chao);
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
@@ -38,14 +40,38 @@ function draw() {
 
   image(backgroundImg,0,0,width, height);
   
+  // Desenhar várias bolas de canhão
+  for(var i=0; i<bolas.length;i++){
+    displayBolasCanhao(bolas[i],i);
+  }
+  
   canhao.display();
   torre.display();
-  bolaCanhao.display();
+  // rect(chao.position.x,chao.position.y, width*2, 4);
+  
+  
+
+
 }
 
 function keyReleased() {
   if (keyCode === DOWN_ARROW) {
-    bolaCanhao.shoot();
+    bolas[bolas.length-1].shoot();
+  }
+}
+
+function keyPressed() {
+  if(keyCode === DOWN_ARROW) {
+    var bolaCanhao = new CannonBall(canhao.x, canhao.y+4);
+    bolas.push(bolaCanhao);
+  }
+}
+
+function displayBolasCanhao(bola, index) {
+  bola.display();
+  if (bola.body.position.x >= width || bola.body.position.y >= height-50) {
+    World.remove(mundo,bola.body);
+    bolas.splice(index,1);
   }
 }
 
