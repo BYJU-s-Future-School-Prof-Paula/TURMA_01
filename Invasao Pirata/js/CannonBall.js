@@ -12,6 +12,8 @@ class CannonBall {
       this.body = Bodies.circle(x,y,this.r,options);
       //carregue a imagem
       this.image = loadImage("../assets/cannonball.png");
+
+      this.trajetoria = [];
       
       World.add(mundo, this.body);
     }
@@ -33,6 +35,19 @@ class CannonBall {
         var angle = this.body.angle;
         var pos = this.body.position;
 
+        console.log(pos);
+
+        if(this.body.velocity.x>0 && this.body.position.x > 100){
+          var posicao = [pos.x,pos.y];
+          this.trajetoria.push(posicao);
+        }
+
+        for(var i=0; i<this.trajetoria.length;i++){
+          image(this.image,this.trajetoria[i][0], this.trajetoria[i][1],5,5);
+        }
+
+
+        
         push();
         translate(pos.x, pos.y);
         rotate(angle);

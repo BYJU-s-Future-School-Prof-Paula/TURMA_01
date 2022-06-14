@@ -8,6 +8,7 @@ let mundo;
 var torre;
 var canhao;
 var chao;
+var barco;
 
 var backgroundImg;
 var bolas = [];
@@ -25,6 +26,7 @@ function setup() {
 
   torre = new Tower(150,350,160,310);
   canhao = new Cannon(175,120,130,100);
+  barco = new Boat(width, height-150,200,200,-100);
   
   chao = Bodies.rectangle(600,595,width*2,4,{isStatic: true});
   World.add(mundo, chao);
@@ -44,9 +46,20 @@ function draw() {
   for(var i=0; i<bolas.length;i++){
     displayBolasCanhao(bolas[i],i);
   }
+
+  // velocidade para o barco
+  Body.setVelocity(barco.body, {
+    x:-0.9,
+    y:0
+  });
+
+  
+
+
   
   canhao.display();
   torre.display();
+  barco.display();
   // rect(chao.position.x,chao.position.y, width*2, 4);
   
   
