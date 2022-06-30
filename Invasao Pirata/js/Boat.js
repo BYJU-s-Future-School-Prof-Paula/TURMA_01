@@ -1,29 +1,29 @@
 class Boat{
-    constructor(x,y,largura, altura, posBarco){
-        var options = {
-            restitution: 0.8,
-            friction: 1,
-            density: 1
-        };
-
-        this.body = Bodies.rectangle(x,y,largura,altura,options);
-
-        this.largura = largura;
-        this.altura = altura;
-        this.posBarco = posBarco;
-
+    constructor(x,y,width,height,desloc,animation){
+        this.body = Bodies.rectangle(x,y,width,height);
+        this.width = width;
+        this.height = height;
+        this.desloc = desloc;
         this.image = loadImage("../assets/boat.png");
-
-        World.add(mundo, this.body);
+        World.add(world,this.body);
+        this.animation = animation;
+        this.speed = 0.05;
     }
 
     display() {
+        var angle = this.body.angle;
         var pos = this.body.position;
+        var index = floor(this.speed % this.animation.length);
 
         push();
+        translate(pos.x,pos.y);
+        rotate(angle);
         imageMode(CENTER);
-        image(this.image,pos.x, pos.y,this.largura,this.altura);
+        image(this.animation[index],0,this.desloc,this.width, this.height);
         pop();
     }
 
+    animate() {
+        this.speed += 0.05 % 1.1;
+    }
 }

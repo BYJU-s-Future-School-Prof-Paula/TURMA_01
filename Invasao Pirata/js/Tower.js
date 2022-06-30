@@ -1,23 +1,24 @@
 class Tower{
-
-    constructor(x,y,largura, altura){
+    constructor(x,y,w,h) {
+        
         var options = {
             isStatic: true
         };
 
-        this.largura =largura;
-        this.altura = altura;
+        this.body = Bodies.rectangle(x,y,w,h,options);
 
-        this.body = Bodies.rectangle(x,y,largura,altura, options);
-        World.add(mundo,this.body);
+        this.width = w;
+        this.height = h;
+        this.img = loadImage("../assets/tower.png")
 
-        this.image = loadImage("../assets/tower.png");
+        World.add(world,this.body);  
     }
 
-    display(){
+    display() {
+        var pos = this.body.position;
         push();
         imageMode(CENTER);
-        image(this.image, this.body.position.x, this.body.position.y, this.largura, this.altura);
+        image(this.img,pos.x,pos.y,this.width,this.height);
         pop();
     }
 

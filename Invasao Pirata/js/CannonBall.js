@@ -1,60 +1,80 @@
-class CannonBall {
-    constructor(x, y) {
-      var options = {
-        restitution: 0.8,
-        friction: 1.0,
-        density: 1.0,
-        isStatic: true
-      };
-      this.r = 30;
+class CannonBall{
+    constructor(x,y){
+        var options = {
+            restitution: 0.1,
+            friction: 1,
+            density: 1,
+            isStatic: true
+        };
 
-      //crie um corpo circular
-      this.body = Bodies.circle(x,y,this.r,options);
-      //carregue a imagem
-      this.image = loadImage("../assets/cannonball.png");
+        this.r = 30;
 
-      this.trajetoria = [];
-      
-      World.add(mundo, this.body);
+        this.body = Bodies.circle(x,y,this.r, options);
+        World.add(world, this.body);
+
+        this.image = loadImage("../assets/cannonball.png");
+        this.trajetory = [];
+        this.isSink = false;
+        
     }
-  
-    shoot() {
-        var novo = canhao.angle - 28;
-        novo = novo * (3.14/180);
 
-        var velocidade = p5.Vector.fromAngle(novo);
-        velocidade.mult(0.5);
+    shoot(){
+        var newAngle = cannon.angle - 30;
+        newAngle = newAngle*(3.14/180);
+
+        var velocity = p5.Vector.fromAngle(newAngle);
+        velocity.mult(0.5);
         
         Body.setStatic(this.body, false);
-        Body.setVelocity(this.body, {x:velocidade.x * (180/3.14),
-                                     y:velocidade.y * (180/3.14)});
-
+        Body.setVelocity(this.body,{
+            x: velocity.x * (180/3.14),
+            y: velocity.y * (180/3.14)
+        });
     }
-  
+
     display() {
         var angle = this.body.angle;
         var pos = this.body.position;
 
-        console.log(pos);
-
-        if(this.body.velocity.x>0 && this.body.position.x > 100){
-          var posicao = [pos.x,pos.y];
-          this.trajetoria.push(posicao);
+        if(this.body.velocity.x > 0 && pos.x > 200) {
+            var position = [pos.x, pos.y];
+            this.trajetory.push(position);
         }
 
-        for(var i=0; i<this.trajetoria.length;i++){
-          image(this.image,this.trajetoria[i][0], this.trajetoria[i][1],5,5);
+        // desenha as posicoes
+        for(var i = 0; i < this.trajetory.length; i++){
+            image(this.image, this.trajetory[i][0], this.trajetory[i][1],5,5);
         }
 
-
-        
-        push();
-        translate(pos.x, pos.y);
-        rotate(angle);
-        imageMode(CENTER);
-        //mostrar a imagem
-        image(this.image,0,0,this.r, this.r);
-        pop();
-  
-      }
+        if(this.isSink){
+            var index = floor(this.speed % this.animation.length);
+            push();
+            translate(pos.x,pos.y);
+            rotate(angle);
+            imageMode(CENTER);
+            image(this.animation[index],0,0,this.r, this.r);
+            pop();
+        }else{
+            push();
+            translate(pos.x,pos.y);
+            rotate(angle);
+            imageMode(CENTER);
+            image(this.image,0,0,this.r, this.r);
+            pop();
+        }
     }
+
+    remove(index) {
+        this.isSink = true;
+        Body.setVelocity(this.body, {x:0, y:0});
+
+        this.animation = waterAnimation;
+        this.speed = 0.05;
+        this.r = 150;
+
+        setTimeout(() => {
+            World.remove(world, balls[index].body);
+            balls.splice(index,1);
+        }, 1000);
+    }
+}
